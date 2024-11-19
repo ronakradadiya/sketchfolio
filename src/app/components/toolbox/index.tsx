@@ -48,7 +48,7 @@ const ToolBox = () => {
                     value ===
                     ("color" in activeMenuItemData
                       ? activeMenuItemData.color
-                      : null),
+                      : COLORS.BLACK),
                 })}
                 style={{ backgroundColor: value }}
                 onClick={() => updateColor(value)}
