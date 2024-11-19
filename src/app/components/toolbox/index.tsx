@@ -1,27 +1,37 @@
 "use client";
 
 import React from "react";
+import cx from "classnames";
 import { COLORS, MENU_ITEMS } from "@/app/constants";
 import styles from "./index.module.css";
 import useStore from "@/app/store";
 import { useShallow } from "zustand/shallow";
 
 const ToolBox = () => {
-  const { activeMenuItem } = useStore(
+  const { activeMenuItem, changeColor, changeBrushSize } = useStore(
     useShallow((state) => ({
       activeMenuItem: state.activeMenuItem,
+      changeColor: state.changeColor,
+      changeBrushSize: state.changeBrushSize,
     }))
   );
+  const activeMenuItemData = useStore((state) => state[activeMenuItem]);
 
   const showStrokeToolOption = activeMenuItem === MENU_ITEMS.PENCIL;
   const showBrushToolOption = activeMenuItem === MENU_ITEMS.ERASER;
 
-  const updateBrushSize = () => {
-    //
+  const updateBrushSize = (e: React.ChangeEvent<HTMLInputElement>) => {
+    changeBrushSize({
+      item: activeMenuItem,
+      size: +e.target.value,
+    });
   };
 
-  const updateColor = () => {
-    //
+  const updateColor = (value: (typeof COLORS)[keyof typeof COLORS]) => {
+    changeColor({
+      item: activeMenuItem,
+      color: value,
+    });
   };
 
   return (
@@ -33,9 +43,15 @@ const ToolBox = () => {
             {Object.entries(COLORS).map(([key, value]) => (
               <div
                 key={key}
-                className={styles.colorBox}
+                className={cx(styles.colorBox, {
+                  [styles.active]:
+                    value ===
+                    ("color" in activeMenuItemData
+                      ? activeMenuItemData.color
+                      : null),
+                })}
                 style={{ backgroundColor: value }}
-                // onClick={() => updateColor(value)}
+                onClick={() => updateColor(value)}
               />
             ))}
           </div>
@@ -53,7 +69,7 @@ const ToolBox = () => {
               style={{
                 cursor: "pointer",
               }}
-              // onChange={updateBrushSize}
+              onChange={updateBrushSize}
             />
           </div>
         </div>

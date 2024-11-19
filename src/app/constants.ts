@@ -6,7 +6,7 @@ const COLORS = {
   ORANGE: 'orange',
   YELLOW: 'yellow',
   WHITE: 'white'
-}
+} as const
 
 const MENU_ITEMS = {
   PENCIL: 'PENCIL',

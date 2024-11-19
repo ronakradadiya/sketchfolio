@@ -1,25 +1,33 @@
 import { MENU_ITEMS } from "@/app/constants";
 import { StateCreator } from "zustand";
+import { IToolboxSlice } from "./toolbox-slice";
 
-export interface IMenuStore {
-  activeMenuItem: keyof typeof MENU_ITEMS;
-  menuItemClick: (payload: IMenuStore["activeMenuItem"]) => void;
-  actionMenuItem: keyof typeof MENU_ITEMS | null;
-  actionItemClick: (payload: IMenuStore["actionMenuItem"]) => void;
+export interface IMenuSlice {
+  activeMenuItem: (typeof MENU_ITEMS)[keyof typeof MENU_ITEMS];
+  menuItemClick: (payload: IMenuSlice["activeMenuItem"]) => void;
+  actionMenuItem: (typeof MENU_ITEMS)[keyof typeof MENU_ITEMS] | null;
+  actionItemClick: (payload: IMenuSlice["actionMenuItem"]) => void;
 }
 
-const initialState: Pick<IMenuStore, "activeMenuItem" | "actionMenuItem"> = {
+const initialState: Pick<IMenuSlice, "activeMenuItem" | "actionMenuItem"> = {
   activeMenuItem: MENU_ITEMS.PENCIL,
   actionMenuItem: null,
 };
 
-const menuSlice: StateCreator<IMenuStore> = (set) => ({
+const menuSlice: StateCreator<
+  IMenuSlice & IToolboxSlice,
+  [],
+  [],
+  IMenuSlice
+> = (set) => ({
   ...initialState,
-  menuItemClick: (payload: keyof typeof MENU_ITEMS) =>
+  menuItemClick: (payload: (typeof MENU_ITEMS)[keyof typeof MENU_ITEMS]) =>
     set(() => ({
       activeMenuItem: payload,
     })),
-  actionItemClick: (payload: keyof typeof MENU_ITEMS | null) => {
+  actionItemClick: (
+    payload: (typeof MENU_ITEMS)[keyof typeof MENU_ITEMS] | null
+  ) => {
     set(() => ({
       actionMenuItem: payload,
     }));
