@@ -63,7 +63,7 @@ const toolboxSlice: StateCreator<
     set((state) => ({
       [payload.item]: {
         ...state[payload.item],
-        brush: payload.size,
+        size: payload.size,
       },
     })),
 });
