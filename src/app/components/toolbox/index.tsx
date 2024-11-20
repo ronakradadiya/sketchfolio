@@ -18,7 +18,7 @@ const ToolBox = () => {
   const activeMenuItemData = useStore((state) => state[activeMenuItem]);
 
   const showStrokeToolOption = activeMenuItem === MENU_ITEMS.PENCIL;
-  const showBrushToolOption = activeMenuItem === MENU_ITEMS.ERASER;
+  const showBrushToolOption = activeMenuItem === MENU_ITEMS.ERASER || activeMenuItem === MENU_ITEMS.PENCIL;
 
   const updateBrushSize = (e: React.ChangeEvent<HTMLInputElement>) => {
     changeBrushSize({
