@@ -3,14 +3,16 @@
 import React, { useRef, useLayoutEffect, useEffect } from "react";
 import { useShallow } from "zustand/shallow";
 import useStore from "@/app/store";
-import { COLORS } from "@/app/constants";
+import { COLORS, MENU_ITEMS } from "@/app/constants";
 
 const Board = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const shouldDraw = useRef(false);
-  const { activeMenuItem } = useStore(
+  const { activeMenuItem, actionMenuItem, actionItemClick } = useStore(
     useShallow((state) => ({
       activeMenuItem: state.activeMenuItem,
+      actionMenuItem: state.actionMenuItem,
+      actionItemClick: state.actionItemClick,
     }))
   );
   const activeMenuItemData = useStore((state) => state[activeMenuItem]);
@@ -19,6 +21,22 @@ const Board = () => {
   const size = "size" in activeMenuItemData ? activeMenuItemData.size : 1;
 
   console.log("Board", activeMenuItemData);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    if (actionMenuItem === MENU_ITEMS.DOWNLOAD) {
+      const URL = canvas.toDataURL();
+      const anchor = document.createElement("a");
+      anchor.href = URL;
+      anchor.download = "sketch.jpg";
+      anchor.click();
+    }
+
+    actionItemClick(null);
+  }, [actionMenuItem]);
 
   useEffect(() => {
     if (!canvasRef.current) return;
