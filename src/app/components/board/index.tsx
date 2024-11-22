@@ -2,6 +2,8 @@
 
 import React, { useRef, useLayoutEffect, useEffect } from "react";
 import { useShallow } from "zustand/shallow";
+import { socket } from "@/app/socket";
+
 import useStore from "@/app/store";
 import { COLORS, MENU_ITEMS } from "@/app/constants";
 
@@ -151,6 +153,10 @@ const Board = () => {
     canvas.addEventListener("touchstart", handleMouseDown);
     canvas.addEventListener("touchmove", handleMouseMove);
     canvas.addEventListener("touchend", handleMouseUp);
+
+    socket.on("connect", () => {
+      console.log('socket connected')
+    })
 
     return () => {
       canvas.removeEventListener("mousedown", handleMouseDown);
