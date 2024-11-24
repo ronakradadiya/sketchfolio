@@ -48,14 +48,14 @@ const Board = () => {
       if (historyPointer.current > 0 && actionMenuItem === MENU_ITEMS.UNDO) {
         historyPointer.current -= 1;
       }
-        
+
       if (
         historyPointer.current < drawHistory.current.length - 1 &&
         actionMenuItem === MENU_ITEMS.REDO
       ) {
         historyPointer.current += 1;
       }
-        
+
       const imageData = drawHistory.current[historyPointer.current];
       context.putImageData(imageData, 0, 0);
     }
@@ -81,6 +81,20 @@ const Board = () => {
     };
 
     changeConfig(color, size);
+
+    const handleChangeConfig = (config: {
+      color: (typeof COLORS)[keyof typeof COLORS];
+      size: number;
+    }) => {
+      console.log("config", config);
+      changeConfig(config.color, config.size);
+    };
+
+    socket.on("changeConfig", handleChangeConfig);
+
+    return () => {
+      socket.off("changeConfig", handleChangeConfig);
+    };
   }, [color, size]);
 
   useLayoutEffect(() => {
@@ -120,6 +134,7 @@ const Board = () => {
       }
 
       beginPath(x, y);
+      socket.emit("beginPath", { x, y });
     };
 
     const handleMouseMove = (e: MouseEvent | TouchEvent) => {
@@ -137,6 +152,7 @@ const Board = () => {
       }
 
       drawLine(x, y);
+      socket.emit("drawLine", { x, y });
     };
 
     const handleMouseUp = (e: MouseEvent | TouchEvent) => {
@@ -144,6 +160,14 @@ const Board = () => {
       const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
       drawHistory.current.push(imageData);
       historyPointer.current = drawHistory.current.length - 1;
+    };
+
+    const handleBeginPath = (path: { x: number; y: number }) => {
+      beginPath(path.x, path.y);
+    };
+
+    const handleDrawLine = (path: { x: number; y: number }) => {
+      drawLine(path.x, path.y);
     };
 
     canvas.addEventListener("mousedown", handleMouseDown);
@@ -154,9 +178,8 @@ const Board = () => {
     canvas.addEventListener("touchmove", handleMouseMove);
     canvas.addEventListener("touchend", handleMouseUp);
 
-    socket.on("connect", () => {
-      console.log('socket connected')
-    })
+    socket.on("beginPath", handleBeginPath);
+    socket.on("drawLine", handleDrawLine);
 
     return () => {
       canvas.removeEventListener("mousedown", handleMouseDown);
@@ -166,6 +189,9 @@ const Board = () => {
       canvas.removeEventListener("touchstart", handleMouseDown);
       canvas.removeEventListener("touchmove", handleMouseMove);
       canvas.removeEventListener("touchend", handleMouseUp);
+
+      socket.off("beginPath", handleBeginPath);
+      socket.off("drawLine", handleDrawLine);
     };
   }, []);
 

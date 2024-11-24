@@ -7,6 +7,8 @@ import styles from "./index.module.css";
 import useStore from "@/app/store";
 import { useShallow } from "zustand/shallow";
 
+import { socket } from "@/app/socket";
+
 const ToolBox = () => {
   const { activeMenuItem, changeColor, changeBrushSize } = useStore(
     useShallow((state) => ({
@@ -16,13 +18,22 @@ const ToolBox = () => {
     }))
   );
   const activeMenuItemData = useStore((state) => state[activeMenuItem]);
+  const color =
+    "color" in activeMenuItemData ? activeMenuItemData.color : COLORS.BLACK;
+  const size = "size" in activeMenuItemData ? activeMenuItemData.size : 1;
 
   const showStrokeToolOption = activeMenuItem === MENU_ITEMS.PENCIL;
-  const showBrushToolOption = activeMenuItem === MENU_ITEMS.ERASER || activeMenuItem === MENU_ITEMS.PENCIL;
+  const showBrushToolOption =
+    activeMenuItem === MENU_ITEMS.ERASER ||
+    activeMenuItem === MENU_ITEMS.PENCIL;
 
   const updateBrushSize = (e: React.ChangeEvent<HTMLInputElement>) => {
     changeBrushSize({
       item: activeMenuItem,
+      size: +e.target.value,
+    });
+    socket.emit("changeConfig", {
+      color,
       size: +e.target.value,
     });
   };
@@ -32,6 +43,7 @@ const ToolBox = () => {
       item: activeMenuItem,
       color: value,
     });
+    socket.emit("changeConfig", { color: value, size });
   };
 
   return (
