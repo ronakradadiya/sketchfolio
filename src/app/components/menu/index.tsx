@@ -34,8 +34,6 @@ const Menu = () => {
     actionItemClick(itemName);
   };
 
-  console.log("Menu", { activeMenuItem, actionMenuItem });
-
   return (
     <div className={styles.menuContainer}>
       <div

@@ -1,6 +1,6 @@
 import { COLORS, MENU_ITEMS } from "@/app/constants";
 import { StateCreator } from "zustand";
-import { IMenuSlice } from "./menu-slice";
+import { IMenuSlice } from "@/app/slice/menu-slice";
 
 export interface IToolboxSlice {
   [MENU_ITEMS.PENCIL]: {

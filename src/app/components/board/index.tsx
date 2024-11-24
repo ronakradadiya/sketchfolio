@@ -24,8 +24,6 @@ const Board = () => {
     "color" in activeMenuItemData ? activeMenuItemData.color : COLORS.BLACK;
   const size = "size" in activeMenuItemData ? activeMenuItemData.size : 1;
 
-  console.log("Board", activeMenuItemData);
-
   useEffect(() => {
     if (!canvasRef.current) return;
     const canvas = canvasRef.current;
@@ -86,7 +84,6 @@ const Board = () => {
       color: (typeof COLORS)[keyof typeof COLORS];
       size: number;
     }) => {
-      console.log("config", config);
       changeConfig(config.color, config.size);
     };
 
