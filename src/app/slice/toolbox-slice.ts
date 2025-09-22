@@ -11,9 +11,9 @@ export interface IToolboxSlice {
     color: (typeof COLORS)[keyof typeof COLORS];
     size: number;
   };
-  [MENU_ITEMS.UNDO]: {};
-  [MENU_ITEMS.REDO]: {};
-  [MENU_ITEMS.DOWNLOAD]: {};
+  [MENU_ITEMS.UNDO]: object;
+  [MENU_ITEMS.REDO]: object;
+  [MENU_ITEMS.DOWNLOAD]: object;
 
   changeColor: (payload: {
     item: (typeof MENU_ITEMS)[keyof typeof MENU_ITEMS];
