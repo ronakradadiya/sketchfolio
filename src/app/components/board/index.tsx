@@ -117,6 +117,11 @@ const Board = () => {
     };
 
     const handleMouseDown = (e: MouseEvent | TouchEvent) => {
+      // Prevent default behavior for touch events
+      if (e instanceof TouchEvent) {
+        e.preventDefault();
+      }
+
       shouldDraw.current = true;
 
       let x: number;
@@ -137,6 +142,11 @@ const Board = () => {
     const handleMouseMove = (e: MouseEvent | TouchEvent) => {
       if (!shouldDraw.current) return;
 
+      // Prevent default behavior for touch events
+      if (e instanceof TouchEvent) {
+        e.preventDefault();
+      }
+
       let x: number;
       let y: number;
 
@@ -153,6 +163,10 @@ const Board = () => {
     };
 
     const handleMouseUp = (e: MouseEvent | TouchEvent) => {
+      // Prevent default behavior for touch events
+      if (e instanceof TouchEvent) {
+        e.preventDefault();
+      }
       shouldDraw.current = false;
       const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
       drawHistory.current.push(imageData);
